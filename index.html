@@ -3,12 +3,485 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Site</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Signature Salon — Batajnica</title>
+    <meta
+      name="description"
+      content="Signature Salon in Batajnica, Belgrade — cut, color, and styling by appointment."
+    />
+
+    <!-- Fonts: Fraunces (display, warm ink-trap serif) + Homemade Apple (literal signature/script accent) + Work Sans (body/utility) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,500&family=Homemade+Apple&family=Work+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: '#18140F',
+              paper: '#F6F0E4',
+              gold: '#B08A3E',
+              wine: '#5C1626',
+              taupe: '#A0907C',
+            },
+            fontFamily: {
+              display: ['"Fraunces"', 'serif'],
+              script: ['"Homemade Apple"', 'cursive'],
+              body: ['"Work Sans"', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background-color: #f6f0e4;
+      }
+      .signature-path {
+        stroke-dasharray: 1400;
+        stroke-dashoffset: 1400;
+      }
+      .grain::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+        pointer-events: none;
+        mix-blend-mode: overlay;
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+        .signature-path {
+          stroke-dashoffset: 0 !important;
+        }
+      }
+      .hairline {
+        background: linear-gradient(90deg, transparent, #b08a3e, transparent);
+        height: 1px;
+      }
+      :focus-visible {
+        outline: 2px solid #b08a3e;
+        outline-offset: 3px;
+      }
+    </style>
   </head>
-  <body>
-    <h1>Hello</h1>
-    <p>My static site.</p>
-    <script src="script.js"></script>
+
+  <body class="font-body text-ink antialiased">
+    <!-- ===== NAV ===== -->
+    <header
+      class="fixed top-0 inset-x-0 z-50 backdrop-blur-sm bg-paper/80 border-b border-ink/10"
+    >
+      <div
+        class="max-w-6xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between"
+      >
+        <a href="#top" class="font-display text-lg tracking-tight"
+          >Signature <span class="text-gold">Salon</span></a
+        >
+        <nav
+          class="hidden md:flex items-center gap-8 text-sm tracking-wide text-ink/70"
+        >
+          <a href="#services" class="hover:text-ink transition-colors"
+            >Services</a
+          >
+          <a href="#work" class="hover:text-ink transition-colors">Work</a>
+          <a href="#stylists" class="hover:text-ink transition-colors"
+            >Stylists</a
+          >
+          <a href="#visit" class="hover:text-ink transition-colors">Visit</a>
+        </nav>
+        <a
+          href="#book"
+          class="text-sm px-4 py-2 rounded-full bg-ink text-paper hover:bg-wine transition-colors"
+          >Book a chair</a
+        >
+      </div>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section id="top" class="relative overflow-hidden bg-ink text-paper grain">
+      <div
+        class="max-w-6xl mx-auto px-6 md:px-10 pt-40 pb-28 md:pt-52 md:pb-36 relative"
+      >
+        <p
+          class="text-gold/90 text-xs md:text-sm tracking-[0.3em] uppercase mb-6"
+        >
+          Batajnica, Belgrade — by appointment
+        </p>
+
+        <h1
+          class="font-display font-light text-[13vw] md:text-[6.5vw] leading-[0.95] max-w-4xl"
+        >
+          A cut that carries<br class="hidden md:block" />
+          your <em class="italic text-gold not-italic-fallback">signature</em>.
+        </h1>
+
+        <div class="mt-10 flex items-center gap-6">
+          <svg
+            id="sig-svg"
+            viewBox="0 0 420 90"
+            class="w-56 md:w-72 h-auto"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              id="sig-path"
+              class="signature-path"
+              d="M10 60 C 40 10, 70 10, 85 55 C 95 80, 60 85, 55 60 C 50 30, 90 20, 120 45 C 140 62, 150 30, 175 30 C 210 30, 190 70, 220 65 C 250 60, 240 20, 270 25 C 300 30, 285 65, 310 60 C 335 55, 330 20, 355 30 C 375 38, 370 55, 400 45"
+              stroke="#B08A3E"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+          </svg>
+          <p class="text-paper/60 text-sm max-w-[14rem]">
+            Every appointment ends the same way — with a finish that's
+            unmistakably yours.
+          </p>
+        </div>
+
+        <div class="mt-14 flex flex-wrap gap-4">
+          <a
+            href="#book"
+            class="px-6 py-3 rounded-full bg-gold text-ink text-sm font-medium hover:bg-paper transition-colors"
+            >Book a chair</a
+          >
+          <a
+            href="#services"
+            class="px-6 py-3 rounded-full border border-paper/30 text-sm hover:border-gold hover:text-gold transition-colors"
+            >See services</a
+          >
+        </div>
+      </div>
+      <div class="hairline absolute bottom-0 inset-x-0"></div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section
+      id="services"
+      class="max-w-6xl mx-auto px-6 md:px-10 py-24 md:py-32"
+    >
+      <div class="reveal flex items-end justify-between mb-14 flex-wrap gap-4">
+        <h2 class="font-display text-4xl md:text-5xl font-light">Services</h2>
+        <p class="text-taupe text-sm max-w-xs">
+          Priced per consultation — every head of hair is a different brief.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-x-16">
+        <div
+          class="reveal border-t border-ink/15 py-6 flex justify-between items-baseline group"
+        >
+          <div>
+            <h3 class="font-display text-xl">Cut &amp; Finish</h3>
+            <p class="text-taupe text-sm mt-1">
+              Consultation, wash, precision cut, blow-dry styling.
+            </p>
+          </div>
+          <span class="text-gold text-sm whitespace-nowrap ml-6"
+            >from 2.500 din</span
+          >
+        </div>
+        <div
+          class="reveal border-t border-ink/15 py-6 flex justify-between items-baseline"
+        >
+          <div>
+            <h3 class="font-display text-xl">Color &amp; Balayage</h3>
+            <p class="text-taupe text-sm mt-1">
+              Full color, root touch-up, or hand-painted balayage.
+            </p>
+          </div>
+          <span class="text-gold text-sm whitespace-nowrap ml-6"
+            >from 5.000 din</span
+          >
+        </div>
+        <div
+          class="reveal border-t border-ink/15 py-6 flex justify-between items-baseline"
+        >
+          <div>
+            <h3 class="font-display text-xl">Keratin Treatment</h3>
+            <p class="text-taupe text-sm mt-1">
+              Smoothing treatment for frizz-free, glass-finish hair.
+            </p>
+          </div>
+          <span class="text-gold text-sm whitespace-nowrap ml-6"
+            >from 8.000 din</span
+          >
+        </div>
+        <div
+          class="reveal border-t border-ink/15 py-6 flex justify-between items-baseline"
+        >
+          <div>
+            <h3 class="font-display text-xl">Bridal &amp; Occasion</h3>
+            <p class="text-taupe text-sm mt-1">
+              Trial included. Styling that holds through the whole night.
+            </p>
+          </div>
+          <span class="text-gold text-sm whitespace-nowrap ml-6"
+            >from 6.500 din</span
+          >
+        </div>
+        <div
+          class="reveal border-t border-b border-ink/15 py-6 flex justify-between items-baseline md:col-span-2"
+        >
+          <div>
+            <h3 class="font-display text-xl">Men's Grooming</h3>
+            <p class="text-taupe text-sm mt-1">
+              Cut, beard shape, and hot towel finish.
+            </p>
+          </div>
+          <span class="text-gold text-sm whitespace-nowrap ml-6"
+            >from 1.800 din</span
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WORK / GALLERY ===== -->
+    <section id="work" class="bg-wine text-paper py-24 md:py-32">
+      <div class="max-w-6xl mx-auto px-6 md:px-10">
+        <h2 class="reveal font-display text-4xl md:text-5xl font-light mb-3">
+          Recent work
+        </h2>
+        <p class="reveal text-paper/60 text-sm mb-14 max-w-md">
+          A handful of finishes from the chair this season.
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div
+            class="reveal aspect-[3/4] rounded-lg bg-gradient-to-br from-[#7a3346] to-[#3d0f1b] flex items-end p-4"
+          >
+            <span class="font-script text-2xl text-gold/90">balayage</span>
+          </div>
+          <div
+            class="reveal aspect-[3/4] rounded-lg bg-gradient-to-br from-[#8a5a2c] to-[#3d2410] flex items-end p-4 mt-6 md:mt-10"
+          >
+            <span class="font-script text-2xl text-paper/90">bridal updo</span>
+          </div>
+          <div
+            class="reveal aspect-[3/4] rounded-lg bg-gradient-to-br from-[#4d2e35] to-[#1e1013] flex items-end p-4"
+          >
+            <span class="font-script text-2xl text-gold/90">textured crop</span>
+          </div>
+          <div
+            class="reveal aspect-[3/4] rounded-lg bg-gradient-to-br from-[#6d4a2e] to-[#2b1c10] flex items-end p-4 mt-6 md:mt-10"
+          >
+            <span class="font-script text-2xl text-paper/90">copper gloss</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STYLISTS ===== -->
+    <section
+      id="stylists"
+      class="max-w-6xl mx-auto px-6 md:px-10 py-24 md:py-32"
+    >
+      <h2 class="reveal font-display text-4xl md:text-5xl font-light mb-14">
+        Behind the chair
+      </h2>
+      <div class="grid sm:grid-cols-3 gap-10">
+        <div class="reveal">
+          <div
+            class="aspect-square rounded-full bg-ink/8 mb-5 flex items-center justify-center"
+          >
+            <span class="font-script text-3xl text-gold">M</span>
+          </div>
+          <h3 class="font-display text-lg">Milica</h3>
+          <p class="text-taupe text-sm">
+            Color &amp; balayage specialist, 11 years behind the chair.
+          </p>
+        </div>
+        <div class="reveal">
+          <div
+            class="aspect-square rounded-full bg-ink/8 mb-5 flex items-center justify-center"
+          >
+            <span class="font-script text-3xl text-gold">D</span>
+          </div>
+          <h3 class="font-display text-lg">Dušan</h3>
+          <p class="text-taupe text-sm">
+            Precision cuts and men's grooming, trained in Milan.
+          </p>
+        </div>
+        <div class="reveal">
+          <div
+            class="aspect-square rounded-full bg-ink/8 mb-5 flex items-center justify-center"
+          >
+            <span class="font-script text-3xl text-gold">A</span>
+          </div>
+          <h3 class="font-display text-lg">Ana</h3>
+          <p class="text-taupe text-sm">
+            Bridal styling and keratin treatments.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BOOK / CTA ===== -->
+    <section id="book" class="bg-ink text-paper relative overflow-hidden grain">
+      <div
+        class="max-w-6xl mx-auto px-6 md:px-10 py-24 md:py-32 grid md:grid-cols-2 gap-14 items-center relative"
+      >
+        <div class="reveal">
+          <h2
+            class="font-display text-4xl md:text-5xl font-light leading-tight mb-6"
+          >
+            Reserve your <span class="text-gold">chair</span>.
+          </h2>
+          <p class="text-paper/60 text-sm max-w-sm mb-8">
+            Tell us what you're after and when suits you — we'll confirm within
+            the day.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <a
+              href="tel:+381600000000"
+              class="px-6 py-3 rounded-full bg-gold text-ink text-sm font-medium hover:bg-paper transition-colors"
+              >Call +381 60 000 000</a
+            >
+            <a
+              href="https://instagram.com"
+              class="px-6 py-3 rounded-full border border-paper/30 text-sm hover:border-gold hover:text-gold transition-colors"
+              >@signaturesalon.batajnica</a
+            >
+          </div>
+        </div>
+
+        <form id="book-form" class="reveal space-y-4">
+          <div>
+            <label
+              for="name"
+              class="block text-xs tracking-wide uppercase text-paper/50 mb-2"
+              >Name</label
+            >
+            <input
+              id="name"
+              type="text"
+              required
+              class="w-full bg-transparent border-b border-paper/25 py-2 focus:border-gold outline-none transition-colors placeholder:text-paper/30"
+              placeholder="Your name"
+            />
+          </div>
+          <div>
+            <label
+              for="service"
+              class="block text-xs tracking-wide uppercase text-paper/50 mb-2"
+              >Service</label
+            >
+            <select
+              id="service"
+              class="w-full bg-transparent border-b border-paper/25 py-2 focus:border-gold outline-none transition-colors text-paper [&>option]:text-ink"
+            >
+              <option>Cut &amp; Finish</option>
+              <option>Color &amp; Balayage</option>
+              <option>Keratin Treatment</option>
+              <option>Bridal &amp; Occasion</option>
+              <option>Men's Grooming</option>
+            </select>
+          </div>
+          <div>
+            <label
+              for="date"
+              class="block text-xs tracking-wide uppercase text-paper/50 mb-2"
+              >Preferred date</label
+            >
+            <input
+              id="date"
+              type="date"
+              class="w-full bg-transparent border-b border-paper/25 py-2 focus:border-gold outline-none transition-colors text-paper"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full mt-4 px-6 py-3 rounded-full bg-gold text-ink text-sm font-medium hover:bg-paper transition-colors"
+          >
+            Request booking
+          </button>
+          <p
+            id="book-note"
+            class="text-xs text-paper/40 pt-1"
+            aria-live="polite"
+          ></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===== VISIT / FOOTER ===== -->
+    <footer
+      id="visit"
+      class="max-w-6xl mx-auto px-6 md:px-10 py-16 grid sm:grid-cols-3 gap-10 text-sm"
+    >
+      <div>
+        <h3 class="font-display text-lg mb-3">Signature Salon</h3>
+        <p class="text-taupe">Cara Dušana 214<br />Batajnica, Belgrade</p>
+      </div>
+      <div>
+        <h3 class="font-display text-lg mb-3">Hours</h3>
+        <p class="text-taupe">Tue–Sat, 09:00–20:00<br />Closed Sun–Mon</p>
+      </div>
+      <div>
+        <h3 class="font-display text-lg mb-3">Contact</h3>
+        <p class="text-taupe">+381 60 000 000<br />hello@signaturesalon.rs</p>
+      </div>
+    </footer>
+    <div class="hairline max-w-6xl mx-auto"></div>
+    <p class="text-center text-xs text-taupe py-6">
+      &copy; 2026 Signature Salon. All rights reserved.
+    </p>
+
+    <!-- ESM module: Motion One for the signature draw-in and scroll reveals -->
+    <script type="module">
+      import {
+        animate,
+        inView,
+        stagger,
+      } from 'https://esm.sh/motion@11?bundle';
+
+      // Draw the signature on load
+      const sigPath = document.querySelector('#sig-path');
+      if (sigPath) {
+        animate(
+          sigPath,
+          { strokeDashoffset: [1400, 0] },
+          { duration: 2.2, delay: 0.3, easing: [0.65, 0, 0.35, 1] },
+        );
+      }
+
+      // Reveal-on-scroll for anything marked .reveal
+      inView(
+        '.reveal',
+        ({ target }) => {
+          animate(
+            target,
+            { opacity: [0, 1], y: [24, 0] },
+            { duration: 0.7, easing: [0.22, 1, 0.36, 1] },
+          );
+        },
+        { margin: '0px 0px -10% 0px' },
+      );
+
+      // Simple booking form feedback (static page — no backend wired up yet)
+      const form = document.querySelector('#book-form');
+      const note = document.querySelector('#book-note');
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        note.textContent = "Thanks — we'll confirm by phone shortly.";
+        animate(note, { opacity: [0, 1] }, { duration: 0.4 });
+        form.reset();
+      });
+    </script>
   </body>
 </html>
