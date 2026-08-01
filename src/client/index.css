@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+
+/* The custom theme colors */
+@theme {
+  --color-ink: #18140f;
+  --color-paper: #f6f0e4;
+  --color-gold: #b08a3e;
+  --color-wine: #5c1626;
+  --color-taupe: #a0907c;
+
+  --font-display: 'Fraunces Variable', serif;
+  --font-script: 'Homemade Apple', cursive;
+  --font-body: 'Work Sans Variable', sans-serif;
+}
+
+/* ── The <style> block from the HTML page ── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+}
+
+.signature-path {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+}
+
+.grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+/* Static-site safety net: if the bundle never runs, .reveal content would
+   stay invisible forever (bad for a client site and for crawlers that don't
+   execute JS). Put `class="no-js"` on <html> in your template and strip it
+   with an inline head script: document.documentElement.classList.remove('no-js') */
+.no-js .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .signature-path {
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+.hairline {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-gold),
+    transparent
+  );
+  height: 1px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}

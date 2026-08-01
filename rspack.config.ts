@@ -1,5 +1,5 @@
 import { defineConfig } from '@rspack/cli';
-import { ReactRefreshRspackPlugin } from '@rspack/plugin-react-refresh';
+// import { ReactRefreshRspackPlugin } from '@rspack/plugin-react-refresh';
 import { SsgPlugin } from './ssg-plugin';
 import { pages } from './src/pages-manifest';
 import { RspackManifestPlugin } from 'rspack-manifest-plugin';
@@ -8,7 +8,7 @@ import type { Configuration } from '@rspack/core';
 const dev = process.env.NODE_ENV !== 'production';
 
 /** Shared TSX rule (SWC, built in — no babel/ts-loader). */
-const tsxRule = (refresh: boolean) => ({
+const tsxRule = () => ({
   test: /\.tsx?$/,
   exclude: /node_modules/,
   loader: 'builtin:swc-loader',
@@ -16,11 +16,44 @@ const tsxRule = (refresh: boolean) => ({
     jsc: {
       parser: { syntax: 'typescript', tsx: true },
       transform: {
-        react: { runtime: 'automatic', development: dev, refresh },
+        react: { runtime: 'automatic', development: dev },
       },
     },
   },
 });
+
+const nodeModulesCssRule = {
+  test: /\.css$/,
+  include: /node_modules/,
+  type: 'css/auto',
+  parser: {
+    css: {
+      // Ensure @import and url() are resolved
+      import: true,
+      url: true,
+    },
+  },
+  generator: {
+    css: {
+      exportsOnly: false,
+    },
+  },
+};
+
+const cssRule = {
+  test: /\.css$/,
+  exclude: /node_modules/,
+  use: ['postcss-loader'],
+  type: 'css',
+};
+
+const assets = {
+  test: /\.(woff2?|eot|ttf|otf)$/i,
+  type: 'asset/resource',
+  generator: {
+    filename: 'assets/fonts/[name][ext]',
+  },
+};
 
 const clientConfig: Configuration = {
   name: 'client',
@@ -67,13 +100,14 @@ const clientConfig: Configuration = {
       },
     },
   },
-  resolve: { extensions: ['.tsx', '.ts', '.js'] },
-  module: { rules: [tsxRule(dev)] },
+  resolve: { extensions: ['.tsx', '.ts', '.js', '.css'] },
+  module: { rules: [tsxRule(), cssRule, nodeModulesCssRule, assets] },
   plugins: [
-    dev && new ReactRefreshRspackPlugin(),
+    // dev && new ReactRefreshRspackPlugin(),
     new RspackManifestPlugin({
       publicPath: '/',
       generate: (_, files, entries) => {
+        console.log({ files, entries });
         // files need the publicPath prepended, entries already have paths
         const manifest = {
           files: files
@@ -104,6 +138,8 @@ const clientConfig: Configuration = {
     static: false,
     historyApiFallback: false,
     devMiddleware: { writeToDisk: true },
+    hot: false,
+    liveReload: true,
   },
 };
 
@@ -121,10 +157,10 @@ const ssgConfig: Configuration = {
     clean: false, // don't wipe the client output
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js', '.css'],
   },
   module: {
-    rules: [tsxRule(false)],
+    rules: [tsxRule(), cssRule, nodeModulesCssRule, assets],
   },
   plugins: [
     new SsgPlugin({
