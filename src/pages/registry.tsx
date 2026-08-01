@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { pages as manifest } from "../pages-manifest.mjs";
+import { pages as manifest } from "../pages-manifest";
 import { Home } from "./home";
 import { About } from "./about";
 

@@ -2,17 +2,22 @@
 // and emits one index.html per page into the compilation output.
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import fs from 'node:fs';
+import type { Compiler } from '@rspack/core';
+import type { RenderModule } from './types';
 
 const require = createRequire(import.meta.url);
 
 export class SsgPlugin {
-  /** @param {{ bundle: string }} opts - asset name of the node render bundle */
-  constructor(opts) {
+  bundle: string;
+  manifest: string;
+
+  constructor(opts: { bundle: string; manifest: string }) {
     this.bundle = opts.bundle;
+    this.manifest = opts.manifest;
   }
 
-  /** @param {import('@rspack/core').Compiler} compiler */
-  apply(compiler) {
+  apply(compiler: Compiler) {
     const { Compilation, sources, WebpackError } = compiler.webpack;
 
     compiler.hooks.thisCompilation.tap('SsgPlugin', (compilation) => {
@@ -28,12 +33,24 @@ export class SsgPlugin {
           // and break the build process, causing it to hang indefinitely and
           // forcing server restart
           try {
+            const manifestPath = path.join(
+              compiler.options.output.path ?? 'dist',
+              this.manifest,
+            );
+
+            if (!fs.existsSync(manifestPath)) {
+              console.log('⏳ Manifest not found at:', manifestPath);
+              return;
+            }
+
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+
             const asset = compilation.getAsset(this.bundle);
             if (!asset) {
               throw new Error(`SsgPlugin: asset "${this.bundle}" not found`);
             }
 
-            const freshRequire = (id) => {
+            const freshRequire = (id: string) => {
               delete require.cache[require.resolve(id)];
               return require(id);
             };
@@ -47,11 +64,11 @@ export class SsgPlugin {
               freshRequire,
             );
 
-            const getAssetUrl = () => {
-              //
-            };
+            const getAssets = (entry: string) => manifest.entrypoints[entry];
 
-            const pages = await mod.exports.renderPages(getAssetUrl);
+            const pages = await (mod.exports as RenderModule).renderPages(
+              getAssets,
+            );
 
             // Basic validation of the returned array
             if (!Array.isArray(pages)) {
@@ -70,9 +87,11 @@ export class SsgPlugin {
             // Build-time helper only — keep it out of dist/.
             compilation.deleteAsset(this.bundle);
           } catch (error) {
+            const err =
+              error instanceof Error ? error : new Error(String(error));
             // Push a non‑fatal error so the build can finish
             compilation.errors.push(
-              new WebpackError(`SsgPlugin: ${error.message}\n${error.stack}`),
+              new WebpackError(`SsgPlugin: ${err.message}\n${err.stack}`),
             );
 
             // Clean up the render bundle asset if it exists

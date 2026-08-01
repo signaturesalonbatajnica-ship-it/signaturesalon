@@ -1,6 +1,8 @@
 import { renderToString } from 'react-dom/server';
 import { pages } from './pages/registry';
 
+import type { RenderModule, RenderPages, GetAssets } from '../types';
+
 export function Document({
   children,
   scripts,
@@ -24,17 +26,24 @@ export function Document({
   );
 }
 
-export function renderPages(getAssetUrl: any): { path: string; html: string }[] {
+const renderPages: RenderPages = async (getAssets: GetAssets) => {
   return pages.map(({ path, Component, entry }) => {
-    console.log(">>>", getAssetUrl('home'))
-    const scripts = <script type="module" src={`/assets/${entry}.js`} />;
+    const scripts = getAssets(entry).map((src) => (
+      <script key={src} src={src} />
+    ));
 
-    const html = renderToString(
+    const doctype = '<!DOCTYPE html>';
+
+    const page = renderToString(
       <Document scripts={scripts}>
         <Component />
       </Document>,
     );
 
+    const html = doctype + page;
+
     return { path, html };
   });
-}
+};
+
+export { renderPages };

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "rspack serve",
+    "dev": "rspack dev",
     "build": "rspack build",
     "typecheck": "tsc --noEmit"
   },
@@ -17,6 +17,7 @@
     "@rspack/plugin-react-refresh": "^2.0.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
+    "cross-env": "^10.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-refresh": "^0.18.0",
@@ -25,6 +26,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "@rspack/dev-server": "^2.1.0"
+    "@rspack/dev-server": "^2.1.0",
+    "@types/node": "^26.1.2"
   }
 }
