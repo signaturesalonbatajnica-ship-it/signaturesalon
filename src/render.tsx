@@ -24,8 +24,9 @@ export function Document({
   );
 }
 
-export function renderPages(): { path: string; html: string }[] {
+export function renderPages(getAssetUrl: any): { path: string; html: string }[] {
   return pages.map(({ path, Component, entry }) => {
+    console.log(">>>", getAssetUrl('home'))
     const scripts = <script type="module" src={`/assets/${entry}.js`} />;
 
     const html = renderToString(

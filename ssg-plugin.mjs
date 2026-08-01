@@ -1,7 +1,7 @@
 // Evaluates the node-target render bundle in-memory during processAssets
 // and emits one index.html per page into the compilation output.
-import path from "node:path";
-import { createRequire } from "node:module";
+import path from 'node:path';
+import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 
@@ -15,10 +15,10 @@ export class SsgPlugin {
   apply(compiler) {
     const { Compilation, sources, WebpackError } = compiler.webpack;
 
-    compiler.hooks.thisCompilation.tap("SsgPlugin", (compilation) => {
+    compiler.hooks.thisCompilation.tap('SsgPlugin', (compilation) => {
       compilation.hooks.processAssets.tapPromise(
         {
-          name: "SsgPlugin",
+          name: 'SsgPlugin',
           stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
         },
         async () => {
@@ -41,24 +41,28 @@ export class SsgPlugin {
             // Evaluate the CommonJS bundle without touching disk.
             const code = asset.source.source().toString();
             const mod = { exports: {} };
-            new Function("module", "exports", "require", code)(
+            new Function('module', 'exports', 'require', code)(
               mod,
               mod.exports,
               freshRequire,
             );
 
-            const pages = await mod.exports.renderPages();
+            const getAssetUrl = () => {
+              //
+            };
+
+            const pages = await mod.exports.renderPages(getAssetUrl);
 
             // Basic validation of the returned array
             if (!Array.isArray(pages)) {
-              throw new Error("renderPages() must return an array");
+              throw new Error('renderPages() must return an array');
             }
 
             for (const { path: urlPath, html } of pages) {
               // '/' -> 'index.html', '/about/' -> 'about/index.html'
               const name = path.posix.join(
-                urlPath.replace(/^\//, ""),
-                "index.html",
+                urlPath.replace(/^\//, ''),
+                'index.html',
               );
               compilation.emitAsset(name, new sources.RawSource(html));
             }

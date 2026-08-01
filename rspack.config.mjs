@@ -35,6 +35,39 @@ export default defineConfig([
       clean: true,
       module: true,
     },
+    optimization: {
+      moduleIds: 'deterministic',
+      chunkIds: 'deterministic',
+      runtimeChunk: 'single', // extracts runtime into a single shared chunk
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          // Extract React & React‑DOM into a separate vendor chunk
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+            name: 'vendor-react',
+            chunks: 'all',
+            priority: 20,
+            enforce: true,
+          },
+          // Other third‑party libraries (e.g., lodash, axios, etc.)
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendor-common',
+            chunks: 'all',
+            priority: 10,
+            enforce: true,
+          },
+          // Shared application code (across multiple entries)
+          common: {
+            minChunks: 2,
+            priority: 5,
+            reuseExistingChunk: true,
+            name: 'common',
+          },
+        },
+      },
+    },
     experiments: { outputModule: true },
     resolve: { extensions: ['.tsx', '.ts', '.js'] },
     module: { rules: [tsxRule(dev)] },
@@ -65,6 +98,10 @@ export default defineConfig([
       extensions: ['.tsx', '.ts', '.js'],
     },
     module: { rules: [tsxRule(false)] },
-    plugins: [new SsgPlugin({ bundle: '.ssg/render.cjs' })],
+    plugins: [
+      new SsgPlugin({
+        bundle: '.ssg/render.cjs',
+      }),
+    ],
   },
 ]);
