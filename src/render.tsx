@@ -1,7 +1,7 @@
 import { renderToString } from 'react-dom/server';
 import { pages } from './pages/registry';
 
-import type { RenderModule, RenderPages, GetAssets } from '../types';
+import type { RenderPages, GetAssets } from '../types';
 
 export function Document({
   children,
