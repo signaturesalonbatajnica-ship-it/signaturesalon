@@ -1,8 +1,29 @@
 {
-  "name": "signaturesalon",
-  "version": "0.0.1",
-  "description": "A hair saloon",
-  "scripts": {},
+  "name": "rspack-ssg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "rspack serve",
+    "build": "rspack build",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "type": "module"
+  "dependencies": {
+    "@rspack/cli": "^2.1.7",
+    "@rspack/core": "^2.1.7",
+    "@rspack/plugin-react-refresh": "^2.0.2",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-refresh": "^0.18.0",
+    "typescript": "^7.0.2"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@rspack/dev-server": "^2.1.0"
+  }
 }
